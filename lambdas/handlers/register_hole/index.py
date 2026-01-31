@@ -13,7 +13,6 @@ SOURCE_FILES = {
 PROCESSED_FILES = {
     "heightfield.json": "application/json",
     "heightfield.bin": "application/octet-stream",
-    "bestline.json": "application/json",
 }
 
 

@@ -13,4 +13,5 @@ export const LAMBDA_NAMES = {
   getHole: "greenreader-get-hole",
   registerHole: "greenreader-register-hole",
   updateHole: "greenreader-update-hole",
+  computeBestline: "greenreader-compute-bestline",
 } as const;

@@ -3,7 +3,7 @@ from shared.response import error, success
 from shared.s3 import cdn_url
 
 SOURCE_FILES = ["image.png", "boundary.json", "contours.json"]
-PROCESSED_FILES = ["heightfield.json", "heightfield.bin", "bestline.json"]
+PROCESSED_FILES = ["heightfield.json", "heightfield.bin"]
 
 
 def handler(event, context):

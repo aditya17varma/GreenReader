@@ -1,4 +1,5 @@
 import { join } from "path";
+import { Duration } from "aws-cdk-lib";
 import { Construct } from "constructs";
 import {
   Function as LambdaFunction,
@@ -22,6 +23,9 @@ export interface ApiConstructProps {
   distribution: Distribution;
 }
 
+// Project root relative to this file (infra/lib/) -> ../../
+const PROJECT_ROOT = join(__dirname, "../..");
+
 export class ApiConstruct extends Construct {
   public readonly api: RestApi;
 
@@ -31,7 +35,7 @@ export class ApiConstruct extends Construct {
     // Shared Lambda layer (db, s3, response helpers)
     const sharedLayer = new LayerVersion(this, "SharedLayer", {
       layerVersionName: LAYER_NAME,
-      code: Code.fromAsset(join(__dirname, "../../lambdas/layer")),
+      code: Code.fromAsset(join(PROJECT_ROOT, "lambdas/layer")),
       compatibleRuntimes: [Runtime.PYTHON_3_12],
       description: "Shared utilities for GreenReader lambdas",
     });
@@ -42,14 +46,14 @@ export class ApiConstruct extends Construct {
       CDN_DOMAIN: props.distribution.distributionDomainName,
     };
 
-    // Helper to create a Lambda function wired to DynamoDB + S3
+    // Helper to create a lightweight Lambda (API/CRUD handlers)
     const makeFn = (name: string, functionName: string, handlerDir: string): LambdaFunction => {
       const fn = new LambdaFunction(this, name, {
         functionName,
         runtime: Runtime.PYTHON_3_12,
         handler: "index.handler",
         code: Code.fromAsset(
-          join(__dirname, `../../lambdas/handlers/${handlerDir}`)
+          join(PROJECT_ROOT, `lambdas/handlers/${handlerDir}`)
         ),
         layers: [sharedLayer],
         environment: commonEnv,
@@ -59,13 +63,41 @@ export class ApiConstruct extends Construct {
       return fn;
     };
 
-    // Lambda functions
+    // CRUD Lambda functions
     const listCoursesFn = makeFn("ListCourses", LAMBDA_NAMES.listCourses, "list_courses");
     const createCourseFn = makeFn("CreateCourse", LAMBDA_NAMES.createCourse, "create_course");
     const getCourseFn = makeFn("GetCourse", LAMBDA_NAMES.getCourse, "get_course");
     const getHoleFn = makeFn("GetHole", LAMBDA_NAMES.getHole, "get_hole");
     const registerHoleFn = makeFn("RegisterHole", LAMBDA_NAMES.registerHole, "register_hole");
     const updateHoleFn = makeFn("UpdateHole", LAMBDA_NAMES.updateHole, "update_hole");
+
+    // Compute Lambda — bundles numpy + backend physics/terrain modules via Docker
+    const computeBestlineFn = new LambdaFunction(this, "ComputeBestline", {
+      functionName: LAMBDA_NAMES.computeBestline,
+      runtime: Runtime.PYTHON_3_12,
+      handler: "index.handler",
+      code: Code.fromAsset(PROJECT_ROOT, {
+        bundling: {
+          image: Runtime.PYTHON_3_12.bundlingImage,
+          command: [
+            "bash", "-c",
+            [
+              "pip install numpy -t /asset-output",
+              "cp lambdas/handlers/compute_bestline/index.py /asset-output/",
+              "mkdir -p /asset-output/terrain /asset-output/physics",
+              "cp backend/terrain/__init__.py backend/terrain/heightmap.py /asset-output/terrain/",
+              "cp backend/physics/__init__.py backend/physics/ball_roll_stimp.py backend/physics/best_line_refine.py /asset-output/physics/",
+            ].join(" && "),
+          ],
+        },
+      }),
+      layers: [sharedLayer],
+      environment: commonEnv,
+      memorySize: 512,
+      timeout: Duration.seconds(30),
+    });
+    props.table.grantReadData(computeBestlineFn);
+    props.bucket.grantRead(computeBestlineFn);
 
     // API Gateway
     this.api = new RestApi(this, "GreenReaderApi", {
@@ -89,5 +121,8 @@ export class ApiConstruct extends Construct {
     hole.addMethod("GET", new LambdaIntegration(getHoleFn));
     hole.addMethod("POST", new LambdaIntegration(registerHoleFn));
     hole.addMethod("PUT", new LambdaIntegration(updateHoleFn));
+
+    const bestline = hole.addResource("bestline");
+    bestline.addMethod("POST", new LambdaIntegration(computeBestlineFn));
   }
 }
