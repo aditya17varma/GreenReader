@@ -1,0 +1,76 @@
+# =========================
+# Python / Virtual Env
+# =========================
+greenReader/
+venv/
+.env/
+
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# =========================
+# Python Packaging
+# =========================
+build/
+dist/
+*.egg-info/
+
+# =========================
+# OS / Editor Noise
+# =========================
+.DS_Store
+Thumbs.db
+
+.vscode/
+.idea/
+
+# =========================
+# Logs & Temp Files
+# =========================
+*.log
+*.tmp
+*.swp
+
+# =========================
+# Jupyter (if used later)
+# =========================
+.ipynb_checkpoints/
+
+# =========================
+# Unity / XR Artifacts
+# (future-proofing)
+# =========================
+Library/
+Temp/
+Obj/
+Build/
+Builds/
+Logs/
+
+# =========================
+# Generated Assets
+# =========================
+*.obj
+*.fbx
+*.glb
+*.gltf
+*.ply
+
+# =========================
+# AWS CDK / Infrastructure
+# =========================
+infra/node_modules/
+infra/dist/
+infra/cdk.out/
+infra/*.js
+infra/*.d.ts
+
+# =========================
+# Secrets
+# =========================
+.env
+*.key
+*.pem
+*.crt
