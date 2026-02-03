@@ -170,3 +170,10 @@ Core: `numpy`, `scipy`, `shapely`, `pyproj`, `opencv-python`, `matplotlib`
 Upload: `requests`
 
 Install: `pip install -r requirements.txt`
+
+## Physics Documentation
+
+See [PHYSICS.md](PHYSICS.md) for detailed documentation of the mathematical models:
+- Terrain reconstruction via RBF interpolation (thin-plate splines)
+- Ball roll physics with Stimpmeter-calibrated friction
+- Coarse-to-fine best line optimization algorithm
