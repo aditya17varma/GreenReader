@@ -3,11 +3,11 @@
 A golf green reading application that computes optimal putt lines using physics simulation and displays them in both 2D and 3D visualizations.
 
 <p align="center">
-  <img src="README_screenshot.png" alt="GreenReader Screenshot" width="800">
+  <img src="assets/README_screenshot.png" alt="GreenReader Screenshot" width="800">
 </p>
 
 <p align="center">
-  <video src="README_video.mp4" controls width="800"></video>
+  <video src="assets/README_video.mp4" controls width="800"></video>
 </p>
 
 ## Overview
