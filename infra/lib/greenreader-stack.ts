@@ -3,6 +3,7 @@ import { Construct } from "constructs";
 import { StorageConstruct } from "./storage";
 import { CdnConstruct } from "./cdn";
 import { ApiConstruct } from "./api";
+import { FrontendConstruct } from "./frontend";
 
 export class GreenReaderStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
@@ -20,6 +21,8 @@ export class GreenReaderStack extends Stack {
       jobTable: storage.jobTable,
       distribution: cdn.distribution,
     });
+
+    new FrontendConstruct(this, "Frontend");
 
     new CfnOutput(this, "ApiUrl", { value: api.api.url });
     new CfnOutput(this, "CdnDomain", {

@@ -49,7 +49,8 @@ Stores all binary and JSON artifacts for every course and hole.
 ```
 {courseId}/{holeNum}/
   source/
-    image.png              # Original green contour map image
+    contour.png            # Contour map image (used for tracing)
+    map.png                # Google Maps image (displayed in frontend)
     boundary.json          # Traced boundary polygon + hole location
     contours.json          # Traced elevation contour lines
   processed/
@@ -362,8 +363,10 @@ After deployment, the stack exports:
 | Output | Value |
 |--------|-------|
 | `ApiUrl` | API Gateway base URL (e.g. `https://xxx.execute-api.us-west-2.amazonaws.com/prod/`) |
-| `CdnDomain` | CloudFront domain (e.g. `d1234abcdef.cloudfront.net`) |
-| `BucketName` | S3 bucket name |
+| `CdnDomain` | CloudFront domain for assets (e.g. `d1234abcdef.cloudfront.net`) |
+| `BucketName` | S3 bucket name for course data |
+| `FrontendUrl` | CloudFront URL for the frontend (e.g. `https://d5678xyz.cloudfront.net`) |
+| `FrontendBucketName` | S3 bucket name for frontend static files |
 
 ## Commands
 
@@ -415,8 +418,9 @@ infra/
     greenreader-stack.ts    # Main stack (composes constructs)
     constants.ts            # Resource names and config
     storage.ts              # S3 + DynamoDB
-    cdn.ts                  # CloudFront distribution
+    cdn.ts                  # CloudFront distribution for assets
     api.ts                  # API Gateway + Lambda functions + Layer
+    frontend.ts             # Frontend S3 bucket + CloudFront distribution
   cdk.json                  # CDK config (uses ts-node, no build step needed)
   package.json
   tsconfig.json

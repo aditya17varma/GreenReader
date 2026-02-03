@@ -13,7 +13,8 @@ For each hole, create a folder under `resources/greenMaps/<Course>/<Hole_N>/` co
 | File | Description |
 |------|-------------|
 | `config.json` | Real-world lat/lon extents (N/S/E/W) and contour interval |
-| `Hole_N.png` | Contour map image of the green |
+| `Hole_N_contour.png` | Contour map image of the green (used for tracing) |
+| `Hole_N_map.png` | Google Maps screenshot of the green (displayed in frontend) |
 
 `config.json` format:
 
@@ -116,7 +117,8 @@ backend/
       PresidioGC/
         Hole_1/
           config.json               # Input: lat/lon extents
-          Hole_1.png                # Input: contour map image
+          Hole_1_contour.png        # Input: contour map image (for tracing)
+          Hole_1_map.png            # Input: Google Maps image (for frontend)
           Hole_1_boundary.json      # Stage 2 output: boundary polygon
           Hole_1_contours.json      # Stage 2 output: traced contours
           unity/
@@ -153,7 +155,8 @@ backend/
 
 When uploaded, files are stored as:
 ```
-{courseId}/{holeNum}/source/image.png
+{courseId}/{holeNum}/source/contour.png
+{courseId}/{holeNum}/source/map.png
 {courseId}/{holeNum}/source/boundary.json
 {courseId}/{holeNum}/source/contours.json
 {courseId}/{holeNum}/processed/heightfield.json

@@ -1,9 +1,11 @@
 // Resource names
 export const BUCKET_NAME = "greenreader-data";
+export const FRONTEND_BUCKET_NAME = "greenreader-frontend";
 export const TABLE_NAME = "greenreader-catalog";
 export const JOB_TABLE_NAME = "greenreader-bestline-jobs";
 export const API_NAME = "greenreader-api";
 export const CDN_COMMENT = "GreenReader CDN";
+export const FRONTEND_CDN_COMMENT = "GreenReader Frontend";
 export const LAYER_NAME = "greenreader-shared";
 
 // Lambda function names
