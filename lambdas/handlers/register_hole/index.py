@@ -8,7 +8,8 @@ from shared.s3 import presigned_upload_url
 logger = get_logger(__name__)
 
 SOURCE_FILES = {
-    "image.png": "image/png",
+    "contour.png": "image/png",
+    "map.png": "image/png",
     "boundary.json": "application/json",
     "contours.json": "application/json",
 }

@@ -43,7 +43,7 @@ def validate_hole(course_name: str, hole_name: str) -> list[str]:
     missing = []
     checks = [
         ("config.json", paths.config_path),
-        ("image PNG", paths.image_path),
+        ("contour PNG", paths.contour_path),
         ("boundary JSON", paths.boundary_path),
         ("contours JSON", paths.contours_path),
     ]
@@ -174,7 +174,8 @@ def cmd_build(args):
 # ---------------------------------------------------------------------------
 
 SOURCE_FILES = {
-    "image.png": "image/png",
+    "contour.png": "image/png",
+    "map.png": "image/png",
     "boundary.json": "application/json",
     "contours.json": "application/json",
 }
@@ -188,7 +189,8 @@ PROCESSED_FILES = {
 def _local_source_files(course_name: str, hole_name: str) -> dict[str, str | None]:
     """Map S3 file names → local paths (None if missing)."""
     return {
-        "image.png": paths.image_path(course_name, hole_name),
+        "contour.png": paths.contour_path(course_name, hole_name),
+        "map.png": paths.map_path(course_name, hole_name),
         "boundary.json": paths.boundary_path(course_name, hole_name),
         "contours.json": paths.contours_path(course_name, hole_name),
     }

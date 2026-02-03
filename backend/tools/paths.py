@@ -17,8 +17,12 @@ def config_path(course_name: str, hole_name: str) -> str:
     return os.path.join(hole_dir(course_name, hole_name), "config.json")
 
 
-def image_path(course_name: str, hole_name: str) -> str:
-    return os.path.join(hole_dir(course_name, hole_name), f"{hole_name}.png")
+def contour_path(course_name: str, hole_name: str) -> str:
+    return os.path.join(hole_dir(course_name, hole_name), f"{hole_name}_contour.png")
+
+
+def map_path(course_name: str, hole_name: str) -> str:
+    return os.path.join(hole_dir(course_name, hole_name), f"{hole_name}_map.png")
 
 
 def boundary_path(course_name: str, hole_name: str) -> str:

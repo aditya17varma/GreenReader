@@ -121,7 +121,7 @@ export default function App() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [holeData, flagPos, ballPos, computing, handleCompute]);
 
-  const imageUrl = holeData?.sourceUrls?.["image.png"];
+  const imageUrl = holeData?.sourceUrls?.["map.png"];
   const canCompute = !!flagPos && !!ballPos && !!holeData && !computing;
   const puttDistanceFt =
     flagPos && ballPos
@@ -170,7 +170,7 @@ export default function App() {
             </div>
 
             <div className="flex flex-col gap-1">
-              {flagPos && (
+              {/* {flagPos && (
                 <p className="text-xs text-muted-foreground">
                   Flag: ({flagPos.xFt.toFixed(1)}, {flagPos.zFt.toFixed(1)}) ft
                 </p>
@@ -179,7 +179,7 @@ export default function App() {
                 <p className="text-xs text-muted-foreground">
                   Ball: ({ballPos.xFt.toFixed(1)}, {ballPos.zFt.toFixed(1)}) ft
                 </p>
-              )}
+              )} */}
               {puttDistanceFt !== null && (
                 <p className="text-xs font-medium text-foreground">
                   Distance: {puttDistanceFt.toFixed(1)} ft

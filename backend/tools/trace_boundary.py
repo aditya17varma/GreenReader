@@ -6,7 +6,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 from backend.maps import GreenExtentsLatLon, infer_green_size_ft, PixelToFeetTransform
-from backend.tools.paths import image_path, boundary_path, config_path
+from backend.tools.paths import contour_path, boundary_path, config_path
 
 
 class BoundaryTracer:
@@ -98,7 +98,7 @@ def main(course_name: str, hole_name: str):
     with open(cfg_file, "r") as f:
         cfg = json.load(f)
 
-    img_file = image_path(course_name, hole_name)
+    img_file = contour_path(course_name, hole_name)
     out_file = boundary_path(course_name, hole_name)
 
     image_bgr = cv2.imread(img_file, cv2.IMREAD_COLOR)

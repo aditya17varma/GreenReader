@@ -1,0 +1,18 @@
+{
+  "units": {
+    "x": "ft",
+    "z": "ft",
+    "y": "ft"
+  },
+  "grid": {
+    "nx": 207,
+    "nz": 182,
+    "resolution_ft": 0.5,
+    "x_min_ft": -51.422495901214354,
+    "z_min_ft": -45.06213638680934
+  },
+  "mask": {
+    "format": "uint8",
+    "note": "mask array not written yet; inside=true"
+  }
+}

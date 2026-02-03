@@ -6,7 +6,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 from backend.maps import GreenExtentsLatLon, infer_green_size_ft, PixelToFeetTransform
-from backend.tools.paths import image_path, contours_path, config_path
+from backend.tools.paths import contour_path, contours_path, config_path
 
 
 class ContourTracer:
@@ -148,7 +148,7 @@ def main(course_name: str, hole_name: str):
     with open(cfg_file, "r") as f:
         cfg = json.load(f)
 
-    img_file = image_path(course_name, hole_name)
+    img_file = contour_path(course_name, hole_name)
     out_file = contours_path(course_name, hole_name)
     contour_interval_ft = cfg.get("contour_interval_ft", 0.25)
 
