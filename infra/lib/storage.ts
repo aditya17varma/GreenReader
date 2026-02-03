@@ -11,11 +11,12 @@ import {
   AttributeType,
   BillingMode,
 } from "aws-cdk-lib/aws-dynamodb";
-import { BUCKET_NAME, TABLE_NAME } from "./constants";
+import { BUCKET_NAME, TABLE_NAME, JOB_TABLE_NAME } from "./constants";
 
 export class StorageConstruct extends Construct {
   public readonly bucket: Bucket;
   public readonly table: Table;
+  public readonly jobTable: Table;
 
   constructor(scope: Construct, id: string) {
     super(scope, id);
@@ -40,6 +41,15 @@ export class StorageConstruct extends Construct {
       sortKey: { name: "sk", type: AttributeType.STRING },
       billingMode: BillingMode.PAY_PER_REQUEST,
       removalPolicy: RemovalPolicy.DESTROY,
+    });
+
+    this.jobTable = new Table(this, "BestlineJobsTable", {
+      tableName: JOB_TABLE_NAME,
+      partitionKey: { name: "pk", type: AttributeType.STRING },
+      sortKey: { name: "sk", type: AttributeType.STRING },
+      billingMode: BillingMode.PAY_PER_REQUEST,
+      removalPolicy: RemovalPolicy.DESTROY,
+      timeToLiveAttribute: "ttl",
     });
 
     this.table.addGlobalSecondaryIndex({

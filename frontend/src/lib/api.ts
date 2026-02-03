@@ -33,6 +33,8 @@ export async function getHole(
   return data.hole;
 }
 
+export type ComputeStatus = "submitting" | "queued" | "running" | "loading";
+
 export async function computeBestLine(
   courseId: string,
   holeNum: number,
@@ -42,9 +44,14 @@ export async function computeBestLine(
     holeXFt: number;
     holeZFt: number;
     stimpFt: number;
-  }
+  },
+  onStatus?: (status: ComputeStatus) => void
 ): Promise<BestLineResult> {
-  const data = await fetchJson<{ bestLine: BestLineResult }>(
+  onStatus?.("submitting");
+  const data = await fetchJson<
+    | { bestLine: BestLineResult }
+    | { jobId: string; status: string }
+  >(
     `/courses/${courseId}/holes/${holeNum}/bestline`,
     {
       method: "POST",
@@ -52,5 +59,50 @@ export async function computeBestLine(
       body: JSON.stringify(params),
     }
   );
-  return data.bestLine;
+  if ("bestLine" in data) {
+    return data.bestLine;
+  }
+
+  return pollBestLine(courseId, holeNum, data.jobId, onStatus);
+}
+
+async function pollBestLine(
+  courseId: string,
+  holeNum: number,
+  jobId: string,
+  onStatus?: (status: ComputeStatus) => void
+): Promise<BestLineResult> {
+  const timeoutMs = 120_000;
+  const intervalMs = 2_000;
+  const start = Date.now();
+
+  onStatus?.("queued");
+
+  while (Date.now() - start < timeoutMs) {
+    const res = await fetch(
+      `${BASE_URL}/courses/${courseId}/holes/${holeNum}/bestline/${jobId}`
+    );
+
+    if (!res.ok) {
+      const body = await res.text();
+      throw new Error(`Best line computation failed: ${body}`);
+    }
+
+    const data = (await res.json()) as
+      | { bestLine: BestLineResult }
+      | { jobId: string; status: string; updatedAt?: string };
+
+    if ("bestLine" in data) {
+      onStatus?.("loading");
+      return data.bestLine;
+    }
+
+    if ("status" in data && data.status === "running") {
+      onStatus?.("running");
+    }
+
+    await new Promise((resolve) => setTimeout(resolve, intervalMs));
+  }
+
+  throw new Error("Best line computation timed out");
 }

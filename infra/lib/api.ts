@@ -6,12 +6,17 @@ import {
   Runtime,
   Code,
   LayerVersion,
+  Tracing,
+  Architecture,
 } from "aws-cdk-lib/aws-lambda";
 import {
   RestApi,
   Cors,
   LambdaIntegration,
+  AccessLogFormat,
+  LogGroupLogDestination,
 } from "aws-cdk-lib/aws-apigateway";
+import { LogGroup, RetentionDays } from "aws-cdk-lib/aws-logs";
 import { Bucket } from "aws-cdk-lib/aws-s3";
 import { Table } from "aws-cdk-lib/aws-dynamodb";
 import { Distribution } from "aws-cdk-lib/aws-cloudfront";
@@ -20,6 +25,7 @@ import { API_NAME, LAYER_NAME, LAMBDA_NAMES } from "./constants";
 export interface ApiConstructProps {
   bucket: Bucket;
   table: Table;
+  jobTable: Table;
   distribution: Distribution;
 }
 
@@ -42,8 +48,10 @@ export class ApiConstruct extends Construct {
 
     const commonEnv = {
       TABLE_NAME: props.table.tableName,
+      JOB_TABLE_NAME: props.jobTable.tableName,
       BUCKET_NAME: props.bucket.bucketName,
       CDN_DOMAIN: props.distribution.distributionDomainName,
+      LOG_LEVEL: "INFO",
     };
 
     // Helper to create a lightweight Lambda (API/CRUD handlers)
@@ -57,6 +65,12 @@ export class ApiConstruct extends Construct {
         ),
         layers: [sharedLayer],
         environment: commonEnv,
+        architecture: Architecture.ARM_64,
+        timeout: Duration.seconds(10),
+        logGroup: new LogGroup(this, `${name}Logs`, {
+          retention: RetentionDays.TWO_WEEKS,
+        }),
+        tracing: Tracing.ACTIVE,
       });
       props.table.grantReadWriteData(fn);
       props.bucket.grantReadWrite(fn);
@@ -70,6 +84,34 @@ export class ApiConstruct extends Construct {
     const getHoleFn = makeFn("GetHole", LAMBDA_NAMES.getHole, "get_hole");
     const registerHoleFn = makeFn("RegisterHole", LAMBDA_NAMES.registerHole, "register_hole");
     const updateHoleFn = makeFn("UpdateHole", LAMBDA_NAMES.updateHole, "update_hole");
+    // Helper for thin bestline API handlers (not created via makeFn — no catalog table access needed)
+    const makeBestlineFn = (name: string, functionName: string, handlerDir: string): LambdaFunction => {
+      const fn = new LambdaFunction(this, name, {
+        functionName,
+        runtime: Runtime.PYTHON_3_12,
+        handler: "index.handler",
+        code: Code.fromAsset(
+          join(PROJECT_ROOT, `lambdas/handlers/${handlerDir}`)
+        ),
+        layers: [sharedLayer],
+        environment: commonEnv,
+        architecture: Architecture.ARM_64,
+        timeout: Duration.seconds(10),
+        logGroup: new LogGroup(this, `${name}Logs`, {
+          retention: RetentionDays.TWO_WEEKS,
+        }),
+        tracing: Tracing.ACTIVE,
+      });
+      return fn;
+    };
+
+    const submitBestlineFn = makeBestlineFn("SubmitBestline", LAMBDA_NAMES.submitBestline, "submit_bestline");
+    props.jobTable.grantReadWriteData(submitBestlineFn);
+    props.bucket.grantRead(submitBestlineFn);
+
+    const getBestlineFn = makeBestlineFn("GetBestline", LAMBDA_NAMES.getBestline, "get_bestline");
+    props.jobTable.grantReadWriteData(getBestlineFn);
+    props.bucket.grantRead(getBestlineFn);
 
     // Compute Lambda — bundles numpy + backend physics/terrain modules via Docker
     const computeBestlineFn = new LambdaFunction(this, "ComputeBestline", {
@@ -85,7 +127,7 @@ export class ApiConstruct extends Construct {
               "pip install numpy -t /asset-output",
               "cp lambdas/handlers/compute_bestline/index.py /asset-output/",
               "mkdir -p /asset-output/terrain /asset-output/physics",
-              "cp backend/terrain/__init__.py backend/terrain/heightmap.py /asset-output/terrain/",
+              "cp backend/terrain/__init__.py backend/terrain/heightmap.py backend/terrain/green.py /asset-output/terrain/",
               "cp backend/physics/__init__.py backend/physics/ball_roll_stimp.py backend/physics/best_line_refine.py /asset-output/physics/",
             ].join(" && "),
           ],
@@ -93,11 +135,25 @@ export class ApiConstruct extends Construct {
       }),
       layers: [sharedLayer],
       environment: commonEnv,
-      memorySize: 512,
-      timeout: Duration.seconds(30),
+      architecture: Architecture.ARM_64,
+      memorySize: 3008,
+      timeout: Duration.seconds(180),
+      logGroup: new LogGroup(this, "ComputeBestlineLogs", {
+        retention: RetentionDays.TWO_WEEKS,
+      }),
+      tracing: Tracing.ACTIVE,
     });
-    props.table.grantReadData(computeBestlineFn);
-    props.bucket.grantRead(computeBestlineFn);
+    props.bucket.grantReadWrite(computeBestlineFn);
+    props.jobTable.grantReadWriteData(computeBestlineFn);
+
+    computeBestlineFn.grantInvoke(submitBestlineFn);
+
+    submitBestlineFn.addEnvironment("COMPUTE_BESTLINE_FUNCTION", computeBestlineFn.functionName);
+
+    // API Gateway access logs
+    const apiLogGroup = new LogGroup(this, "ApiAccessLogs", {
+      retention: RetentionDays.TWO_WEEKS,
+    });
 
     // API Gateway
     this.api = new RestApi(this, "GreenReaderApi", {
@@ -105,6 +161,10 @@ export class ApiConstruct extends Construct {
       defaultCorsPreflightOptions: {
         allowOrigins: Cors.ALL_ORIGINS,
         allowMethods: Cors.ALL_METHODS,
+      },
+      deployOptions: {
+        accessLogDestination: new LogGroupLogDestination(apiLogGroup),
+        accessLogFormat: AccessLogFormat.jsonWithStandardFields(),
       },
     });
 
@@ -123,6 +183,8 @@ export class ApiConstruct extends Construct {
     hole.addMethod("PUT", new LambdaIntegration(updateHoleFn));
 
     const bestline = hole.addResource("bestline");
-    bestline.addMethod("POST", new LambdaIntegration(computeBestlineFn));
+    bestline.addMethod("POST", new LambdaIntegration(submitBestlineFn));
+    const bestlineJob = bestline.addResource("{jobId}");
+    bestlineJob.addMethod("GET", new LambdaIntegration(getBestlineFn));
   }
 }

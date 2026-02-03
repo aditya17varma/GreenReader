@@ -17,6 +17,7 @@ export class GreenReaderStack extends Stack {
     const api = new ApiConstruct(this, "Api", {
       bucket: storage.bucket,
       table: storage.table,
+      jobTable: storage.jobTable,
       distribution: cdn.distribution,
     });
 

@@ -1,6 +1,5 @@
-import io
 import json
-import struct
+from datetime import datetime, timezone
 
 import boto3
 import numpy as np
@@ -9,12 +8,48 @@ from terrain.heightmap import HeightMap
 from physics.ball_roll_stimp import BallRollSimulatorStimp
 from physics.best_line_refine import best_line_coarse_to_fine
 
-from shared.response import error, success
+from shared.db import get_job_table, to_dynamo, bestline_job_key
+from shared.log import get_logger
 from shared.s3 import get_bucket
+
+logger = get_logger(__name__)
 
 s3 = boto3.client("s3")
 
 DEFAULT_STIMP_FT = 10.0
+
+
+def _now_iso():
+    return datetime.now(timezone.utc).isoformat()
+
+
+def _update_job(course_id, hole_num, job_id, updates):
+    if not job_id:
+        return
+    try:
+        table = get_job_table()
+        updates = {**updates, "updatedAt": _now_iso()}
+        update_expr_parts = []
+        expr_names = {}
+        expr_values = {}
+        for idx, (key, value) in enumerate(updates.items()):
+            name_key = f"#k{idx}"
+            value_key = f":v{idx}"
+            update_expr_parts.append(f"{name_key} = {value_key}")
+            expr_names[name_key] = key
+            expr_values[value_key] = to_dynamo(value)
+
+        table.update_item(
+            Key=bestline_job_key(course_id, hole_num, job_id),
+            UpdateExpression="SET " + ", ".join(update_expr_parts),
+            ExpressionAttributeNames=expr_names,
+            ExpressionAttributeValues=expr_values,
+        )
+    except Exception:
+        logger.exception(
+            "Failed to update bestline job",
+            extra={"course_id": course_id, "hole_num": hole_num, "job_id": job_id},
+        )
 
 
 def _load_heightmap(course_id, hole_num):
@@ -22,7 +57,7 @@ def _load_heightmap(course_id, hole_num):
     bucket = get_bucket()
     prefix = f"{course_id}/{hole_num}/processed"
 
-    # Load metadata
+    logger.info("Loading heightfield metadata from S3: %s/heightfield.json", prefix)
     meta_obj = s3.get_object(Bucket=bucket, Key=f"{prefix}/heightfield.json")
     meta = json.loads(meta_obj["Body"].read())
 
@@ -33,76 +68,75 @@ def _load_heightmap(course_id, hole_num):
     x_min = grid["x_min_ft"]
     z_min = grid["z_min_ft"]
 
-    # Load binary elevation data
+    logger.info("Loading heightfield binary from S3: %s/heightfield.bin", prefix)
     bin_obj = s3.get_object(Bucket=bucket, Key=f"{prefix}/heightfield.bin")
     raw = bin_obj["Body"].read()
     Y = np.frombuffer(raw, dtype=np.float32).reshape((nz, nx))
 
-    # Reconstruct grid arrays
     x_axis = np.arange(nx) * res + x_min
     z_axis = np.arange(nz) * res + z_min
     X, Z = np.meshgrid(x_axis, z_axis)
 
-    # Mask: cells with non-zero elevation are inside the green
     mask = Y > 0.0
 
     hm = HeightMap(X=X, Z=Z, Y=Y.astype(np.float64), resolution_ft=res, mask=mask)
     hm.compute_gradients()
 
-    hole_xz = meta.get("hole_xz_ft", {})
-    return hm, hole_xz
+    return hm
 
 
 def handler(event, context):
-    course_id = event["pathParameters"]["courseId"]
-    hole_num = event["pathParameters"]["holeNum"]
+    job = event["job"]
+    job_id = job.get("jobId")
+    course_id = job["courseId"]
+    hole_num = job["holeNum"]
+    ctx = {"course_id": course_id, "hole_num": hole_num, "job_id": job_id}
+    logger.info("Computing bestline job", extra=ctx)
 
     try:
-        body = json.loads(event.get("body") or "{}")
-    except json.JSONDecodeError:
-        return error("Invalid JSON body")
+        body = job.get("params") or {}
 
-    ball_x = body.get("ballXFt")
-    ball_z = body.get("ballZFt")
-    if ball_x is None or ball_z is None:
-        return error("Missing required fields: ballXFt, ballZFt")
+        ball_x = body.get("ballXFt")
+        ball_z = body.get("ballZFt")
+        hole_x = body.get("holeXFt")
+        hole_z = body.get("holeZFt")
+        if ball_x is None or ball_z is None or hole_x is None or hole_z is None:
+            _update_job(course_id, hole_num, job_id, {"status": "failed", "error": "Missing required position fields"})
+            return {"status": "error"}
 
-    stimp_ft = body.get("stimpFt", DEFAULT_STIMP_FT)
+        stimp_ft = body.get("stimpFt", DEFAULT_STIMP_FT)
 
-    # Load heightfield from S3
-    try:
-        hm, stored_hole = _load_heightmap(course_id, hole_num)
-    except s3.exceptions.NoSuchKey:
-        return error("Heightfield not found for this hole", 404)
-    except Exception as e:
-        return error(f"Failed to load heightfield: {str(e)}", 500)
+        ball_x = float(ball_x)
+        ball_z = float(ball_z)
+        hole_x = float(hole_x)
+        hole_z = float(hole_z)
+        stimp_ft = float(stimp_ft)
 
-    # Hole position: use request body or fall back to stored metadata
-    hole_x = body.get("holeXFt", stored_hole.get("x"))
-    hole_z = body.get("holeZFt", stored_hole.get("z"))
-    if hole_x is None or hole_z is None:
-        return error("Hole position not provided and not found in heightfield metadata")
+        # Load heightfield from S3
+        try:
+            hm = _load_heightmap(course_id, hole_num)
+        except Exception:
+            logger.exception("Failed to load heightfield", extra=ctx)
+            _update_job(course_id, hole_num, job_id, {"status": "failed", "error": "Failed to load heightfield"})
+            return {"status": "error"}
 
-    ball_x = float(ball_x)
-    ball_z = float(ball_z)
-    hole_x = float(hole_x)
-    hole_z = float(hole_z)
-    stimp_ft = float(stimp_ft)
+        # Run simulation
+        _update_job(course_id, hole_num, job_id, {"status": "running", "startedAt": _now_iso()})
 
-    # Run simulation
-    sim = BallRollSimulatorStimp(hm, stimp_ft=stimp_ft)
-    result = best_line_coarse_to_fine(
-        sim,
-        ball_x_ft=ball_x,
-        ball_z_ft=ball_z,
-        hole_x_ft=hole_x,
-        hole_z_ft=hole_z,
-    )
+        logger.info("Running simulation: ball=(%.2f, %.2f) hole=(%.2f, %.2f) stimp=%.1f",
+                     ball_x, ball_z, hole_x, hole_z, stimp_ft, extra=ctx)
+        sim = BallRollSimulatorStimp(hm, stimp_ft=stimp_ft)
+        result = best_line_coarse_to_fine(
+            sim,
+            ball_x_ft=ball_x,
+            ball_z_ft=ball_z,
+            hole_x_ft=hole_x,
+            hole_z_ft=hole_z,
+        )
 
-    res = result["result"]
+        res = result["result"]
 
-    return success({
-        "bestLine": {
+        bestline = {
             "ballXFt": ball_x,
             "ballZFt": ball_z,
             "holeXFt": hole_x,
@@ -119,4 +153,30 @@ def handler(event, context):
             "pathZFt": res["path_z"].tolist(),
             "pathYFt": res["path_y"].tolist(),
         }
-    })
+
+        logger.info("Bestline computed: holed=%s miss_ft=%.3f", res["holed"], result["miss_ft"], extra=ctx)
+
+        result_key = job.get("resultKey")
+        if result_key:
+            s3.put_object(
+                Bucket=get_bucket(),
+                Key=result_key,
+                Body=json.dumps({"bestLine": bestline}).encode("utf-8"),
+                ContentType="application/json",
+            )
+        _update_job(
+            course_id,
+            hole_num,
+            job_id,
+            {
+                "status": "completed",
+                "completedAt": _now_iso(),
+                "resultKey": result_key,
+                "cacheKey": job.get("cacheKey"),
+            },
+        )
+        return {"status": "ok"}
+    except Exception:
+        logger.exception("Failed to compute bestline", extra=ctx)
+        _update_job(course_id, hole_num, job_id, {"status": "failed", "error": "Internal server error"})
+        return {"status": "error"}

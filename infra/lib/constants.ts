@@ -1,6 +1,7 @@
 // Resource names
 export const BUCKET_NAME = "greenreader-data";
 export const TABLE_NAME = "greenreader-catalog";
+export const JOB_TABLE_NAME = "greenreader-bestline-jobs";
 export const API_NAME = "greenreader-api";
 export const CDN_COMMENT = "GreenReader CDN";
 export const LAYER_NAME = "greenreader-shared";
@@ -13,5 +14,7 @@ export const LAMBDA_NAMES = {
   getHole: "greenreader-get-hole",
   registerHole: "greenreader-register-hole",
   updateHole: "greenreader-update-hole",
+  submitBestline: "greenreader-submit-bestline",
+  getBestline: "greenreader-get-bestline",
   computeBestline: "greenreader-compute-bestline",
 } as const;
