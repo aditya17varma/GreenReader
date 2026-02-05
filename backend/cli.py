@@ -11,6 +11,8 @@ import argparse
 import json
 import os
 import sys
+import logging
+from urllib.parse import urlsplit, urlunsplit
 
 import numpy as np
 import requests
@@ -20,6 +22,29 @@ from backend.maps import GreenExtentsLatLon, infer_green_size_ft
 from backend.maps.green_map_scale import make_local_grid_ft
 from backend.terrain.contour_reconstruct import reconstruct_heightfield_from_contours
 from backend.tools import paths
+
+
+LOG_LEVEL = os.environ.get("GREENREADER_LOG_LEVEL", "INFO").upper()
+logging.basicConfig(level=LOG_LEVEL, format="%(levelname)s: %(message)s")
+logger = logging.getLogger("greenreader.cli")
+
+
+def _safe_url(url: str) -> str:
+    parts = urlsplit(url)
+    return urlunsplit((parts.scheme, parts.netloc, parts.path, "", ""))
+
+
+def _request(method: str, url: str, **kwargs) -> requests.Response:
+    safe_url = _safe_url(url)
+    logger.info("%s %s", method.upper(), safe_url)
+    if "json" in kwargs and isinstance(kwargs["json"], dict):
+        logger.debug("JSON keys: %s", list(kwargs["json"].keys()))
+    resp = requests.request(method, url, **kwargs)
+    logger.info("%s %s -> %s", method.upper(), safe_url, resp.status_code)
+    if resp.status_code >= 400:
+        body_preview = resp.text[:500]
+        logger.error("Error body: %s", body_preview)
+    return resp
 
 
 def load_config(course_name: str, hole_name: str) -> dict:
@@ -212,8 +237,11 @@ def upload_file(local_path: str, presigned_url: str, content_type: str):
     """Upload a file to S3 using a pre-signed URL."""
     print(f"    Uploading {os.path.basename(local_path)}...")
     with open(local_path, "rb") as f:
-        resp = requests.put(
-            presigned_url, data=f, headers={"Content-Type": content_type}
+        resp = _request(
+            "PUT",
+            presigned_url,
+            data=f,
+            headers={"Content-Type": content_type},
         )
     resp.raise_for_status()
 
@@ -253,7 +281,8 @@ def upload_hole(api_url: str, course_id: str,
 
     # 1. Register hole → get pre-signed URLs
     print(f"  Registering hole {hole_num}...")
-    resp = requests.post(
+    resp = _request(
+        "POST",
         f"{api_url}/courses/{course_id}/holes/{hole_num}",
         json=reg_body,
     )
@@ -280,7 +309,8 @@ def upload_hole(api_url: str, course_id: str,
         update_body["hasProcessed"] = True
 
     if update_body:
-        resp = requests.put(
+        resp = _request(
+            "PUT",
             f"{api_url}/courses/{course_id}/holes/{hole_num}",
             json=update_body,
         )
@@ -294,12 +324,13 @@ def upload_hole(api_url: str, course_id: str,
 
 def ensure_course(api_url: str, course_id: str, display_name: str):
     """Create the course if it doesn't already exist."""
-    resp = requests.get(f"{api_url}/courses/{course_id}")
+    resp = _request("GET", f"{api_url}/courses/{course_id}")
     if resp.status_code == 200:
         print(f"Course '{course_id}' already exists")
         return
     print(f"Creating course '{course_id}'...")
-    resp = requests.post(
+    resp = _request(
+        "POST",
         f"{api_url}/courses",
         json={"id": course_id, "name": display_name},
     )

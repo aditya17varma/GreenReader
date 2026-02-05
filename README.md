@@ -6,12 +6,15 @@ A golf green reading application that computes optimal putt lines using physics 
   <img src="assets/README_screenshot.png" alt="GreenReader Screenshot" width="800">
 </p>
 
-https://github.com/user-attachments/assets/92ef5daa-9a96-45e2-a023-3582db25ae95
+<p align="center">
+  <img src="assets/iOS_view1.png" alt="GreenReader iOS View 1" width="240">
+  <img src="assets/iOS_view2.png" alt="GreenReader iOS View 2" width="240">
+  <img src="assets/iOS_view3.png" alt="GreenReader iOS View 3" width="240">
+</p>
 
-
-
-
-
+<p align="center">
+  <video src="assets/README_video.mp4" controls width="800"></video>
+</p>
 
 ## Overview
 
