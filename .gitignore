@@ -1,7 +1,7 @@
 # =========================
 # Python / Virtual Env
 # =========================
-greenReader/
+/greenReader/
 venv/
 .env/
 

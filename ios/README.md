@@ -1,13 +1,13 @@
 # GreenReader iOS App
 
-A native SwiftUI iOS application for reading golf putting greens. The app displays interactive 2D green maps, allows positioning of ball and flag, computes optimal putting lines via a cloud API, and visualizes the putt trajectory in 3D using SceneKit.
+A native SwiftUI iOS application for reading golf putting greens. The app displays interactive 2D green maps, allows positioning of ball and flag, computes optimal putting lines via a cloud API, and visualizes the putt trajectory in 3D using RealityKit.
 
 ## Features
 
 - **Course Browser**: Browse available golf courses with hole information
 - **Interactive Green Map**: View 2D green topology with draggable ball and flag markers
 - **Best Line Computation**: Calculate the optimal putting line using physics simulation via AWS Lambda
-- **3D Visualization**: View the computed putt trajectory in a native SceneKit 3D scene with animated ball roll
+- **3D Visualization**: View the computed putt trajectory in a native RealityKit 3D scene with animated ball roll
 
 ## Architecture
 
@@ -25,7 +25,7 @@ ios/GreenReader/
 │   │   ├── CourseListView.swift   # Course browser
 │   │   ├── HoleListView.swift     # Hole selection for a course
 │   │   ├── GreenView.swift        # Main green map with ball/flag
-│   │   └── SceneKit3DView.swift   # 3D visualization with SceneKit
+│   │   └── RealityKit3DView.swift   # 3D visualization with RealityKit (Putt3DView)
 │   └── Services/
 │       └── GreenReaderAPI.swift   # REST API client
 └── GreenReader.xcodeproj          # Xcode project
@@ -34,7 +34,7 @@ ios/GreenReader/
 ## Navigation Flow
 
 ```
-CourseListView → HoleListView → GreenView → SceneKit3DView
+CourseListView → HoleListView → GreenView → Putt3DView
      │               │              │            │
      │               │              │            └── 3D ball roll simulation
      │               │              └── 2D green map, compute best line
@@ -98,15 +98,16 @@ The best line computation uses an async job pattern:
   - Speed (ft/s)
   - Result (holed or miss distance)
 - "Compute" button triggers API call
-- "View 3D" button opens SceneKit visualization
+- "View 3D" button opens RealityKit visualization
 
-**SceneKit3DView.swift**
-- Native iOS 3D visualization using SceneKit
+**RealityKit3DView.swift (Putt3DView)**
+- Native iOS 3D visualization using RealityKit with ARView in nonAR mode
 - Features:
-  - 3D terrain mesh generated from heightfield data
-  - Animated golf ball following the computed trajectory
+  - 3D terrain mesh generated from heightfield data via MeshDescriptor
+  - Animated golf ball following the computed trajectory (60fps timer-based)
   - Flag and hole at target position
-  - Interactive camera (pinch to zoom, drag to rotate)
+  - Interactive camera orbit (drag to rotate, pinch to zoom)
+  - Roll/Reset controls for ball animation
   - Info panel showing aim, speed, and result
 - Loads heightfield.json to create terrain topology
 - Ball animation loops continuously along the path
@@ -127,22 +128,24 @@ Constants.UI.pathLineWidth          // 4 points
 Constants.Logging.subsystem         // "com.greenreader"
 ```
 
-## 3D Visualization (SceneKit)
+## 3D Visualization (RealityKit)
 
-The app uses Apple's native SceneKit framework for 3D visualization:
+The app uses Apple's RealityKit framework (the recommended replacement for SceneKit) for 3D visualization:
 
 ### Features
-- **Terrain Mesh**: Generated from heightfield data with exaggerated elevation for visibility
-- **Ball Animation**: Smooth keyframe animation along the computed path
-- **Interactive Camera**: Built-in orbit and zoom controls via `allowsCameraControl`
-- **Lighting**: Ambient and directional lights with shadows
+- **Terrain Mesh**: Generated from heightfield data via `MeshDescriptor` with exaggerated elevation
+- **Ball Animation**: Smooth 60fps timer-based interpolation along the computed path
+- **Interactive Camera**: Custom orbit camera with pan (rotate) and pinch (zoom) gestures
+- **Lighting**: Directional light with shadows via `DirectionalLight`
+- **PBR Materials**: Physically-based rendering with `SimpleMaterial`
 
 ### Future: ARKit Migration
 
-The SceneKit implementation is designed to easily port to ARKit:
-- Replace `SCNView` with `ARSCNView`
-- Add plane detection for placing the green on real surfaces
-- Reuse all 3D content (meshes, materials, animations) unchanged
+RealityKit is designed for easy AR integration:
+- Replace `ARView(cameraMode: .nonAR)` with `ARView(cameraMode: .ar)`
+- Add `ARWorldTrackingConfiguration` for plane detection
+- Place the green on real surfaces using `AnchorEntity(.plane(...))`
+- All 3D content (meshes, materials, animations) transfers unchanged
 
 ## API Reference
 
@@ -202,8 +205,8 @@ Conversion functions in `GreenView.swift`:
 
 ## Requirements
 
-- iOS 17.0+
-- Xcode 15.0+
+- iOS 18.0+
+- Xcode 16.0+
 - Swift 5.9+
 
 ## Building

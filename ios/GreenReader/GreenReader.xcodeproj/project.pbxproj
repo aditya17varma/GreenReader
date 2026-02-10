@@ -1,0 +1,436 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		484CAC672F33DC4C00A7D7B4 /* GreenReaderApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 484CAC662F33DC4C00A7D7B4 /* GreenReaderApp.swift */; };
+		484CAC692F33DC4C00A7D7B4 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 484CAC682F33DC4C00A7D7B4 /* ContentView.swift */; };
+		484CAC6B2F33DC4F00A7D7B4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 484CAC6A2F33DC4F00A7D7B4 /* Assets.xcassets */; };
+		484CAC6E2F33DC4F00A7D7B4 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 484CAC6D2F33DC4F00A7D7B4 /* Preview Assets.xcassets */; };
+		4872A5212F3415F900C04D10 /* Course.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4872A5182F3415F900C04D10 /* Course.swift */; };
+		4872A5252F3415F900C04D10 /* Hole.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4872A5192F3415F900C04D10 /* Hole.swift */; };
+		4872A5272F3415F900C04D10 /* BestLine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4872A5172F3415F900C04D10 /* BestLine.swift */; };
+		4872A52A2F341E4700C04D10 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4872A5292F341E4700C04D10 /* Constants.swift */; };
+		4872A5552F342BC900C04D10 /* GreenReaderAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4872A54D2F342BC900C04D10 /* GreenReaderAPI.swift */; };
+		4872A5572F342BC900C04D10 /* CourseListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4872A5502F342BC900C04D10 /* CourseListView.swift */; };
+		4872A5582F342BC900C04D10 /* GreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4872A5512F342BC900C04D10 /* GreenView.swift */; };
+		4872A5592F342BC900C04D10 /* HoleListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4872A5522F342BC900C04D10 /* HoleListView.swift */; };
+		9A1B2C3E2FABCDE100123456 /* RealityKit3DView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A1B2C3D2FABCDE100123456 /* RealityKit3DView.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		484CAC632F33DC4C00A7D7B4 /* GreenReader.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GreenReader.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		484CAC662F33DC4C00A7D7B4 /* GreenReaderApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GreenReaderApp.swift; sourceTree = "<group>"; };
+		484CAC682F33DC4C00A7D7B4 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		484CAC6A2F33DC4F00A7D7B4 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		484CAC6D2F33DC4F00A7D7B4 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		4872A5172F3415F900C04D10 /* BestLine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BestLine.swift; sourceTree = "<group>"; };
+		4872A5182F3415F900C04D10 /* Course.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Course.swift; sourceTree = "<group>"; };
+		4872A5192F3415F900C04D10 /* Hole.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Hole.swift; sourceTree = "<group>"; };
+		4872A5282F34166800C04D10 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		4872A5292F341E4700C04D10 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		4872A54D2F342BC900C04D10 /* GreenReaderAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GreenReaderAPI.swift; sourceTree = "<group>"; };
+		4872A5502F342BC900C04D10 /* CourseListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseListView.swift; sourceTree = "<group>"; };
+		4872A5512F342BC900C04D10 /* GreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GreenView.swift; sourceTree = "<group>"; };
+		4872A5522F342BC900C04D10 /* HoleListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HoleListView.swift; sourceTree = "<group>"; };
+		4872A57E2F34342300C04D10 /* GreenReader.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = GreenReader.xcodeproj; sourceTree = SOURCE_ROOT; };
+		9A1B2C3D2FABCDE100123456 /* RealityKit3DView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealityKit3DView.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		484CAC602F33DC4C00A7D7B4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		484CAC5A2F33DC4C00A7D7B4 = {
+			isa = PBXGroup;
+			children = (
+				484CAC652F33DC4C00A7D7B4 /* GreenReader */,
+				4872A53A2F3429C300C04D10 /* Frameworks */,
+				484CAC642F33DC4C00A7D7B4 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		484CAC642F33DC4C00A7D7B4 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				484CAC632F33DC4C00A7D7B4 /* GreenReader.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		484CAC652F33DC4C00A7D7B4 /* GreenReader */ = {
+			isa = PBXGroup;
+			children = (
+				484CAC662F33DC4C00A7D7B4 /* GreenReaderApp.swift */,
+				484CAC682F33DC4C00A7D7B4 /* ContentView.swift */,
+				4872A5292F341E4700C04D10 /* Constants.swift */,
+				4872A54F2F342BC900C04D10 /* Services */,
+				4872A5542F342BC900C04D10 /* Views */,
+				4872A5282F34166800C04D10 /* Info.plist */,
+				4872A51A2F3415F900C04D10 /* Models */,
+				484CAC6A2F33DC4F00A7D7B4 /* Assets.xcassets */,
+				484CAC6C2F33DC4F00A7D7B4 /* Preview Content */,
+				4872A57E2F34342300C04D10 /* GreenReader.xcodeproj */,
+			);
+			path = GreenReader;
+			sourceTree = "<group>";
+		};
+		484CAC6C2F33DC4F00A7D7B4 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				484CAC6D2F33DC4F00A7D7B4 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		4872A51A2F3415F900C04D10 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				4872A5172F3415F900C04D10 /* BestLine.swift */,
+				4872A5182F3415F900C04D10 /* Course.swift */,
+				4872A5192F3415F900C04D10 /* Hole.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		4872A53A2F3429C300C04D10 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		4872A54F2F342BC900C04D10 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				4872A54D2F342BC900C04D10 /* GreenReaderAPI.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		4872A5542F342BC900C04D10 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				4872A5502F342BC900C04D10 /* CourseListView.swift */,
+				4872A5512F342BC900C04D10 /* GreenView.swift */,
+				4872A5522F342BC900C04D10 /* HoleListView.swift */,
+				9A1B2C3D2FABCDE100123456 /* RealityKit3DView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		4872A57F2F34342300C04D10 /* Products */ = {
+			isa = PBXGroup;
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		484CAC622F33DC4C00A7D7B4 /* GreenReader */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 484CAC712F33DC4F00A7D7B4 /* Build configuration list for PBXNativeTarget "GreenReader" */;
+			buildPhases = (
+				484CAC5F2F33DC4C00A7D7B4 /* Sources */,
+				484CAC602F33DC4C00A7D7B4 /* Frameworks */,
+				484CAC612F33DC4C00A7D7B4 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = GreenReader;
+			productName = GreenReader;
+			productReference = 484CAC632F33DC4C00A7D7B4 /* GreenReader.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		484CAC5B2F33DC4C00A7D7B4 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1540;
+				LastUpgradeCheck = 2620;
+				TargetAttributes = {
+					484CAC622F33DC4C00A7D7B4 = {
+						CreatedOnToolsVersion = 15.4;
+					};
+				};
+			};
+			buildConfigurationList = 484CAC5E2F33DC4C00A7D7B4 /* Build configuration list for PBXProject "GreenReader" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 484CAC5A2F33DC4C00A7D7B4;
+			productRefGroup = 484CAC642F33DC4C00A7D7B4 /* Products */;
+			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 4872A57F2F34342300C04D10 /* Products */;
+					ProjectRef = 4872A57E2F34342300C04D10 /* GreenReader.xcodeproj */;
+				},
+			);
+			projectRoot = "";
+			targets = (
+				484CAC622F33DC4C00A7D7B4 /* GreenReader */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		484CAC612F33DC4C00A7D7B4 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				484CAC6E2F33DC4F00A7D7B4 /* Preview Assets.xcassets in Resources */,
+				484CAC6B2F33DC4F00A7D7B4 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		484CAC5F2F33DC4C00A7D7B4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4872A5212F3415F900C04D10 /* Course.swift in Sources */,
+				4872A5252F3415F900C04D10 /* Hole.swift in Sources */,
+				4872A52A2F341E4700C04D10 /* Constants.swift in Sources */,
+				4872A5552F342BC900C04D10 /* GreenReaderAPI.swift in Sources */,
+				4872A5572F342BC900C04D10 /* CourseListView.swift in Sources */,
+				4872A5582F342BC900C04D10 /* GreenView.swift in Sources */,
+				4872A5592F342BC900C04D10 /* HoleListView.swift in Sources */,
+				9A1B2C3E2FABCDE100123456 /* RealityKit3DView.swift in Sources */,
+				4872A5272F3415F900C04D10 /* BestLine.swift in Sources */,
+				484CAC692F33DC4C00A7D7B4 /* ContentView.swift in Sources */,
+				484CAC672F33DC4C00A7D7B4 /* GreenReaderApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		484CAC6F2F33DC4F00A7D7B4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = S3UCMXY8T3;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		484CAC702F33DC4F00A7D7B4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = S3UCMXY8T3;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		484CAC722F33DC4F00A7D7B4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"GreenReader/Preview Content\"";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = GreenReader/Info.plist;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = name.adityakunatharaju.GreenReader;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		484CAC732F33DC4F00A7D7B4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"GreenReader/Preview Content\"";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = GreenReader/Info.plist;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = name.adityakunatharaju.GreenReader;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		484CAC5E2F33DC4C00A7D7B4 /* Build configuration list for PBXProject "GreenReader" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				484CAC6F2F33DC4F00A7D7B4 /* Debug */,
+				484CAC702F33DC4F00A7D7B4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		484CAC712F33DC4F00A7D7B4 /* Build configuration list for PBXNativeTarget "GreenReader" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				484CAC722F33DC4F00A7D7B4 /* Debug */,
+				484CAC732F33DC4F00A7D7B4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 484CAC5B2F33DC4C00A7D7B4 /* Project object */;
+}
