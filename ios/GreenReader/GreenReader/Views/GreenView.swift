@@ -21,6 +21,7 @@ struct GreenView: View {
     @State private var isComputing = false
     @State private var computeError: String?
     @State private var show3DView = false
+    @State private var showARView = false
 
     var body: some View {
         VStack(spacing: 0) {
@@ -200,15 +201,29 @@ struct GreenView: View {
                         }
                         .disabled(isComputing)
 
-                        // View 3D button (only enabled when bestLine exists)
+                        // View 3D button
                         Button(action: { show3DView = true }) {
                             HStack {
                                 Image(systemName: "cube")
-                                Text("View 3D")
+                                Text("3D")
                             }
                             .frame(maxWidth: .infinity)
                             .padding()
                             .background(bestLine != nil ? Color.green : Color.gray)
+                            .foregroundColor(.white)
+                            .cornerRadius(12)
+                        }
+                        .disabled(bestLine == nil)
+
+                        // View AR button
+                        Button(action: { showARView = true }) {
+                            HStack {
+                                Image(systemName: "arkit")
+                                Text("AR")
+                            }
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(bestLine != nil ? Color.purple : Color.gray)
                             .foregroundColor(.white)
                             .cornerRadius(12)
                         }
@@ -230,6 +245,15 @@ struct GreenView: View {
                     bestLine: bestLine,
                     hole: hole,
                     onDismiss: { show3DView = false }
+                )
+            }
+        }
+        .fullScreenCover(isPresented: $showARView) {
+            if let bestLine = bestLine, let hole = hole {
+                PuttARView(
+                    bestLine: bestLine,
+                    hole: hole,
+                    onDismiss: { showARView = false }
                 )
             }
         }

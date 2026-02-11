@@ -51,6 +51,7 @@ enum Constants {
 
         // Colors
         static let greenColor = UIColor(red: 0.15, green: 0.5, blue: 0.15, alpha: 1.0)
+        static let groundColor = UIColor(red: 0.55, green: 0.45, blue: 0.30, alpha: 1.0)
         static let bgColor = UIColor(red: 0.1, green: 0.15, blue: 0.1, alpha: 1.0)
 
         // Camera
@@ -63,6 +64,11 @@ enum Constants {
         static let panSensitivity: Float = 0.005
         static let minPitch: Float = 0.05
         static var maxPitch: Float { .pi / 2 - 0.05 }
+
+        // AR
+        static let arTargetWidthM: Float = 0.5
+        static let arMinScale: Float = 0.1
+        static let arMaxScale: Float = 5.0
     }
 
     // MARK: - Logging

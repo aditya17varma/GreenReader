@@ -20,6 +20,8 @@
 		4872A5582F342BC900C04D10 /* GreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4872A5512F342BC900C04D10 /* GreenView.swift */; };
 		4872A5592F342BC900C04D10 /* HoleListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4872A5522F342BC900C04D10 /* HoleListView.swift */; };
 		9A1B2C3E2FABCDE100123456 /* RealityKit3DView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A1B2C3D2FABCDE100123456 /* RealityKit3DView.swift */; };
+		9A1B2C402FABCDE200123456 /* GreenSceneBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A1B2C3F2FABCDE200123456 /* GreenSceneBuilder.swift */; };
+		9A1B2C422FABCDE300123456 /* ARPutt3DView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A1B2C412FABCDE300123456 /* ARPutt3DView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -39,6 +41,8 @@
 		4872A5522F342BC900C04D10 /* HoleListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HoleListView.swift; sourceTree = "<group>"; };
 		4872A57E2F34342300C04D10 /* GreenReader.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = GreenReader.xcodeproj; sourceTree = SOURCE_ROOT; };
 		9A1B2C3D2FABCDE100123456 /* RealityKit3DView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealityKit3DView.swift; sourceTree = "<group>"; };
+		9A1B2C3F2FABCDE200123456 /* GreenSceneBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GreenSceneBuilder.swift; sourceTree = "<group>"; };
+		9A1B2C412FABCDE300123456 /* ARPutt3DView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARPutt3DView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -75,6 +79,7 @@
 				484CAC662F33DC4C00A7D7B4 /* GreenReaderApp.swift */,
 				484CAC682F33DC4C00A7D7B4 /* ContentView.swift */,
 				4872A5292F341E4700C04D10 /* Constants.swift */,
+				9A1B2C3F2FABCDE200123456 /* GreenSceneBuilder.swift */,
 				4872A54F2F342BC900C04D10 /* Services */,
 				4872A5542F342BC900C04D10 /* Views */,
 				4872A5282F34166800C04D10 /* Info.plist */,
@@ -126,6 +131,7 @@
 				4872A5512F342BC900C04D10 /* GreenView.swift */,
 				4872A5522F342BC900C04D10 /* HoleListView.swift */,
 				9A1B2C3D2FABCDE100123456 /* RealityKit3DView.swift */,
+				9A1B2C412FABCDE300123456 /* ARPutt3DView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -219,6 +225,8 @@
 				4872A5582F342BC900C04D10 /* GreenView.swift in Sources */,
 				4872A5592F342BC900C04D10 /* HoleListView.swift in Sources */,
 				9A1B2C3E2FABCDE100123456 /* RealityKit3DView.swift in Sources */,
+				9A1B2C402FABCDE200123456 /* GreenSceneBuilder.swift in Sources */,
+				9A1B2C422FABCDE300123456 /* ARPutt3DView.swift in Sources */,
 				4872A5272F3415F900C04D10 /* BestLine.swift in Sources */,
 				484CAC692F33DC4C00A7D7B4 /* ContentView.swift in Sources */,
 				484CAC672F33DC4C00A7D7B4 /* GreenReaderApp.swift in Sources */,
